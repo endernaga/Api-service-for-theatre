@@ -1,3 +1,16 @@
 from django.contrib import admin
 
-# Register your models here.
+from theatre_api.models import Actor, Genre, Play, TheatreHall, Performance, Reservation, Ticket
+
+models_list = [
+    Actor,
+    Genre,
+    Play,
+    TheatreHall,
+    Performance,
+    Reservation,
+    Ticket
+]
+
+for model in models_list:
+    admin.site.register(model)
