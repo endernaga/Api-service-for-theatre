@@ -81,7 +81,6 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = ("id", "row", "seat", "performance")
-        read_only_fields = ("id",)
 
 
 class TicketListSerializer(TicketSerializer):
