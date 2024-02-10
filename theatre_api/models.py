@@ -44,8 +44,16 @@ class TheatreHall(models.Model):
 
 
 class Performance(models.Model):
-    plays = models.ForeignKey(Play, related_name='performances', on_delete=models.CASCADE)
-    theatre = models.ForeignKey(TheatreHall, related_name='performances', on_delete=models.CASCADE)
+    plays = models.ForeignKey(
+        Play,
+        related_name='performances',
+        on_delete=models.CASCADE
+    )
+    theatre = models.ForeignKey(
+        TheatreHall,
+        related_name='performances',
+        on_delete=models.CASCADE
+    )
     show_time = models.DateTimeField()
 
     def __str__(self):
@@ -54,14 +62,26 @@ class Performance(models.Model):
 
 class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(get_user_model(), related_name="reservations", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        get_user_model(),
+        related_name="reservations",
+        on_delete=models.CASCADE
+    )
 
 
 class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
-    performance = models.ForeignKey(Performance, related_name='tickets', on_delete=models.CASCADE)
-    reservation = models.ForeignKey(Reservation, related_name='tickets', on_delete=models.CASCADE)
+    performance = models.ForeignKey(
+        Performance,
+        related_name='tickets',
+        on_delete=models.CASCADE
+    )
+    reservation = models.ForeignKey(
+        Reservation,
+        related_name='tickets',
+        on_delete=models.CASCADE
+    )
 
     class Meta:
         unique_together = ('row', 'seat', "performance")
@@ -81,5 +101,13 @@ class Ticket(models.Model):
             })
 
     def clean(self):
-        self.validate_seat(self.seat, self.performance.theatre.seats_in_row, ValidationError)
-        self.validate_row(self.row, self.performance.theatre.rows, ValidationError)
+        self.validate_seat(
+            self.seat,
+            self.performance.theatre.seats_in_row,
+            ValidationError
+        )
+        self.validate_row(
+            self.row,
+            self.performance.theatre.rows,
+            ValidationError
+        )

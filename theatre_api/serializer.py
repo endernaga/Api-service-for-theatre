@@ -1,7 +1,15 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from theatre_api.models import Genre, Actor, Play, TheatreHall, Performance, Ticket, Reservation
+from theatre_api.models import (
+    Genre,
+    Actor,
+    Play,
+    TheatreHall,
+    Performance,
+    Ticket,
+    Reservation
+)
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -62,8 +70,16 @@ class PerformanceDetailSerializer(PerformanceSerializer):
 
 
 class PerformanceListSerializer(PerformanceSerializer):
-    film_title = serializers.SlugRelatedField(source="plays", slug_field="title", read_only=True)
-    theatre_name = serializers.SlugRelatedField(source="theatre", slug_field="name", read_only=True)
+    film_title = serializers.SlugRelatedField(
+        source="plays",
+        slug_field="title",
+        read_only=True
+    )
+    theatre_name = serializers.SlugRelatedField(
+        source="theatre",
+        slug_field="name",
+        read_only=True
+    )
 
     class Meta:
         model = Performance
@@ -73,8 +89,16 @@ class PerformanceListSerializer(PerformanceSerializer):
 class TicketSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
-        Ticket.validate_seat(attrs["seat"], attrs["performance"].theatre.seats_in_row, serializers.ValidationError)
-        Ticket.validate_row(attrs["row"], attrs["performance"].theatre.rows, serializers.ValidationError)
+        (Ticket.validate_seat
+         (attrs["seat"],
+          attrs["performance"].theatre.seats_in_row,
+          serializers.ValidationError)
+         )
+        Ticket.validate_row(
+            attrs["row"],
+            attrs["performance"].theatre.rows,
+            serializers.ValidationError
+        )
 
         return data
 
@@ -115,20 +139,29 @@ class ReservationListSerializer(ReservationSerializer):
 
     @staticmethod
     def get_performance_title(reservation):
-        return [f"{count + 1}: {ticket.performance.plays.title}" for count, ticket in enumerate(reservation.tickets.all())]
+        return [f"{count + 1}: {ticket.performance.plays.title}"
+                for count, ticket in enumerate(reservation.tickets.all())]
 
     @staticmethod
     def get_theatre(reservation):
-        return [f"{count + 1}: {ticket.performance.theatre.name}" for count, ticket in enumerate(reservation.tickets.all())]
+        return [f"{count + 1}: {ticket.performance.theatre.name}"
+                for count, ticket in enumerate(reservation.tickets.all())]
 
     @staticmethod
     def get_show_time(reservation):
-        return [f"{count + 1}: {ticket.performance.show_time}" for count, ticket in
+        return [(f"{count + 1}:"
+                 f" {ticket.performance.show_time}") for count, ticket in
                 enumerate(reservation.tickets.all())]
 
     class Meta:
         model = Reservation
-        fields = ("id", "created_at", "theatre", "performance_title", "show_time")
+        fields = (
+            "id",
+            "created_at",
+            "theatre",
+            "performance_title",
+            "show_time"
+        )
 
 
 class ReservationDetailSerializer(ReservationSerializer):

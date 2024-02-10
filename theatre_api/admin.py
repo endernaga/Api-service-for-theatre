@@ -1,6 +1,14 @@
 from django.contrib import admin
 
-from theatre_api.models import Actor, Genre, Play, TheatreHall, Performance, Reservation, Ticket
+from theatre_api.models import (
+    Actor,
+    Genre,
+    Play,
+    TheatreHall,
+    Performance,
+    Reservation,
+    Ticket
+)
 
 models_list = [
     Actor,
