@@ -32,7 +32,7 @@ You copy my project to your device
 ### Building with docker
 
 ```shell
-docket-compose build
+docker-compose build
 docker-compose up
 ```
 
